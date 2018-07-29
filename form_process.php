@@ -14,7 +14,7 @@ function clean($data) {
 //form is submitted with POST method
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!empty($_POST["salary"])) {
-    die();
+    die('Your email has been sent.');
   }
 
   if (empty($_POST["name"])) {
