@@ -1,5 +1,5 @@
 <?php 
-
+require_once 'databse.php';
 // define variables and set to empty values
 $name_error = $email_error = $phone_error = $salary_error = "";
 $name = $email = $phone = $message = $salary = $success = "";
@@ -14,7 +14,7 @@ function clean($data) {
 //form is submitted with POST method
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!empty($_POST["salary"])) {
-    die('Your email has been sent.');
+    die();
   }
 
   if (empty($_POST["name"])) {
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty($_POST["email"])) {
     $email_error = "Your email is required";
   } else {
-    $email = clean($_POST["email"]);
+    $email = filter_var(strip_tags($_POST["email"]), FILTER_SANITIZE_EMAIL);
     // check if e-mail address is well-formed
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       $email_error = "Invalid email format"; 
@@ -52,19 +52,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   } else {
     $message = clean($_POST["message"]);
   }
-  
+
   if ($name_error == '' && $email_error == '' && $phone_error == ''){
       $message_body = '';
       unset($_POST['submit']);
       foreach ($_POST as $key => $value){
           $message_body .=  "$key: $value\n";
       }
-      
-      $to = '_You_@_Your_Email_._TLD';
-      $subject = 'Contact Form Submit';
-      if (mail($to, $subject, $message)){
-          $success = "Message sent, thank you for contacting us!";
-          $name = $email = $phone = $message = '';
+      //$to = '_You_@_Your_Email_._TLD';
+      $to = 'hekuiper@gmail.com';
+      $subject = 'Contact Form Submission';
+      if (!mail($to, $subject, $message)) {
+        echo 'Message could not be sent.';
+    } else {
+      $sql = 'INSERT INTO emails(fullname, email, phone, message) VALUES( ?, ?, ?, ?)';
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute([$name, $email, $phone, $message]);
+      $inserted = $stmt->rowCount();
+      if($inserted > 0){
+      $success = "Message sent, thank you for contacting us!";
+      $name = $email = $phone = $message = '';
+      } else {
+        $success = 'An error occured, please try again later.';
       }
+    }
   }
 }
