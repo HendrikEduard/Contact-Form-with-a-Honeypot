@@ -54,14 +54,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   if ($name_error == '' && $email_error == '' && $phone_error == ''){
-      $message_body = '';
       unset($_POST['submit']);
-      foreach ($_POST as $key => $value){
-          $message_body .=  "$key: $value\n";
-      }
       $to = '_You_@_Your_Email_._TLD';
-      $subject = 'Contact Form Submission';
-      if (!mail($to, $subject, $message)) {
+      $subject = 'Contact Form Submission';      
+      $message_body .="Name: $name \n\n Phone: $phone \n\n Email: $email \n\nmessage: $message";
+      $headers = 'From: ' .' <'.$to.'>' . "\r\n" . 'Reply-To: ' . $email;
+    
+      if (!mail($to, $subject, $message_body)) {
         echo 'Message could not be sent.';
     } else {
       $sql = 'INSERT INTO emails(fullname, email, phone, message) VALUES( ?, ?, ?, ?)';
