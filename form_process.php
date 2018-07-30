@@ -59,8 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       foreach ($_POST as $key => $value){
           $message_body .=  "$key: $value\n";
       }
-      //$to = '_You_@_Your_Email_._TLD';
-      $to = 'hekuiper@gmail.com';
+      $to = '_You_@_Your_Email_._TLD';
       $subject = 'Contact Form Submission';
       if (!mail($to, $subject, $message)) {
         echo 'Message could not be sent.';
