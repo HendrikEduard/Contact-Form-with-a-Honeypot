@@ -12,4 +12,4 @@ In form_process.php you need to change the following:
 $to = '_You_@_Your_Email_._TLD';
 
 Upload the form.sql into either the MySQL console or phpMyAdmin.
-Upload the php and css on to your webserver and you are ready to rock-and-roll!!
+Upload the php and css on to your webserver and you are ready to rock-and-roll!
